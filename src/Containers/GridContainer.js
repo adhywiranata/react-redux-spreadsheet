@@ -21,16 +21,38 @@ class GridContainer extends Component {
     }
 
     this.setCellValue = this.setCellValue.bind(this);
+    this.addColumn = this.addColumn.bind(this);
   }
 
   setCellValue(newCellVal, cellId) {
     const { sheetData } = this.state;
     const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
     const newCells = sheetData.cells.map(row => row.map(updateCellVal));
-    const newSheetData = { ...sheetData, cells: newCells };
     this.setState({
-      sheetData: newSheetData
+      sheetData: { ...sheetData, cells: newCells },
     });
+  }
+
+  addColumn() {
+    const { sheetData } = this.state;
+
+    const headersTailId = sheetData.headers[sheetData.headers.length - 1].id;
+    const headerNewId = String.fromCharCode(headersTailId.charCodeAt(0) + 1);
+    const newHeader = {
+      id: headerNewId,
+      title: 'Untitled Column',
+    };
+
+    const newCells = sheetData.cells.map(row => {
+      let rowNumber = row[0].id.substring(1);
+      let newCell = { id: headerNewId + rowNumber, val: '' };
+      return [ ...row, newCell ]
+    });
+
+    const newHeaders = [...sheetData.headers, newHeader];
+    this.setState({
+      sheetData: { ...sheetData, headers: newHeaders, cells: newCells },
+    })
   }
 
   render() {
@@ -45,7 +67,7 @@ class GridContainer extends Component {
           </div>
         ))}
           <div className="GridCol">
-            <button className="ActionBtn">+</button>
+            <button className="ActionBtn" onClick={this.addColumn}>+</button>
           </div>
         </div>
         { sheetData.cells.map((rowData, index) => (
