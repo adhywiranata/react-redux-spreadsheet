@@ -3,6 +3,7 @@
   flex-direction: column;
   background-color: white;
   overflow-x: scroll;
+  padding-bottom: 20px;
 }
 
 .GridRow {
@@ -14,7 +15,7 @@
 
 .GridFullRow {
   width: 100%;
-  position: absolute;
+  position: fixed;
   bottom: 0;
 }
 
