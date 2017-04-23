@@ -12,10 +12,9 @@ class App extends Component {
           { id: 3, title: 'C' },
         ],
         cells: [
-          ['', '', ''],
-          ['', '', ''],
-          ['', '', ''],
-          ['', '', ''],
+          [{ id: 1, val: '' }, { id: 2, val: '' }, { id: 3, val: '' }],
+          [{ id: 4, val: '' }, { id: 5, val: '' }, { id: 6, val: '' }],
+          [{ id: 7, val: '' }, { id: 8, val: '' }, { id: 9, val: '' }],
         ],
       }
     }
@@ -34,11 +33,11 @@ class App extends Component {
             <button className="ActionBtn">+</button>
           </div>
         </div>
-        { sheetData.cells.map(rowData => (
-          <div className="GridRow">
+        { sheetData.cells.map((rowData, index) => (
+          <div className="GridRow" key={index}>
             { rowData.map(cell => (
-              <div className="GridCol">
-                <input type="text" className="GridCell" />
+              <div className="GridCol" key={cell.id}>
+                <input type="text" className="GridCell" value={cell.val} />
               </div>
             )) }
             <div className="GridCol GridDisabled">
