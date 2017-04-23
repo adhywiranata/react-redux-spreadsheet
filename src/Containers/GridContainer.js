@@ -11,17 +11,20 @@ class GridContainer extends Component {
           { id: 'A', title: 'A' },
           { id: 'B', title: 'B' },
           { id: 'C', title: 'C' },
+          { id: 'D', title: 'D' },
         ],
         cells: [
-          [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }],
-          [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }],
-          [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }],
+          [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }, { id: 'D1', val: '' }],
+          [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }, { id: 'D2', val: '' }],
+          [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }, { id: 'D3', val: '' }],
+          [{ id: 'A4', val: '' }, { id: 'B4', val: '' }, { id: 'C4', val: '' }, { id: 'D4', val: '' }],
         ],
       }
     }
 
     this.setCellValue = this.setCellValue.bind(this);
     this.addColumn = this.addColumn.bind(this);
+    this.addRow = this.addRow.bind(this);
   }
 
   setCellValue(newCellVal, cellId) {
@@ -31,6 +34,10 @@ class GridContainer extends Component {
     this.setState({
       sheetData: { ...sheetData, cells: newCells },
     });
+  }
+
+  addRow() {
+
   }
 
   addColumn() {
@@ -60,15 +67,15 @@ class GridContainer extends Component {
     return (
       <div className="GridContainer">
         <h3>{sheetData.sheetTitle}</h3>
+        <div className="GridFloat">
+          <button className="ActionBtn" onClick={this.addColumn}>+</button>
+        </div>
         <div className="GridRow">
         { sheetData.headers.map(header => (
           <div className="GridCol" key={header.id}>
             <button className="ColBtn">{header.title}</button>
           </div>
         ))}
-          <div className="GridCol">
-            <button className="ActionBtn" onClick={this.addColumn}>+</button>
-          </div>
         </div>
         { sheetData.cells.map((rowData, index) => (
           <div className="GridRow" key={index}>
@@ -82,10 +89,11 @@ class GridContainer extends Component {
                 />
               </div>
             )) }
-            <div className="GridCol GridDisabled">
-            </div>
           </div>
         ))}
+        <div className="GridFullRow">
+          <button className="ActionBtn" onClick={this.addRow}>Add More Row..</button>
+        </div>
       </div>
     );
   }

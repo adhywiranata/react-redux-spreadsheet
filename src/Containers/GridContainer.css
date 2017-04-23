@@ -9,6 +9,19 @@
   display: flex;
   flex: 1;
   flex-direction: row;
+  width: 100%;
+}
+
+.GridFullRow {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+.GridFloat {
+  position: absolute;
+  top: 300;
+  right: 0;
 }
 
 .GridCol {
@@ -45,11 +58,12 @@
 
 .ActionBtn {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
-  color: #333;
+  background-color: #1BBC9B;
+  color: #FFFFFF;
   font-size: 1.2em;
   border: 0;
   cursor: pointer;
   outline: none;
   font-weight: bold;
+  padding: 4px 20px;
 }
