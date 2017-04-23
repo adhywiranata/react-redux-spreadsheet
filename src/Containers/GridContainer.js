@@ -1,28 +1,43 @@
 import React, { Component } from 'react';
 import './GridContainer.css';
 
-class App extends Component {
+class GridContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       sheetData: {
+        sheetTitle: 'just another',
         headers: [
-          { id: 1, title: 'A' },
-          { id: 2, title: 'B' },
-          { id: 3, title: 'C' },
+          { id: 'A', title: 'A' },
+          { id: 'B', title: 'B' },
+          { id: 'C', title: 'C' },
         ],
         cells: [
-          [{ id: 1, val: '' }, { id: 2, val: '' }, { id: 3, val: '' }],
-          [{ id: 4, val: '' }, { id: 5, val: '' }, { id: 6, val: '' }],
-          [{ id: 7, val: '' }, { id: 8, val: '' }, { id: 9, val: '' }],
+          [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }],
+          [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }],
+          [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }],
         ],
       }
     }
+
+    this.setCellValue = this.setCellValue.bind(this);
   }
+
+  setCellValue(newCellVal, cellId) {
+    const { sheetData } = this.state;
+    const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
+    const newCells = sheetData.cells.map(row => row.map(updateCellVal));
+    const newSheetData = { ...sheetData, cells: newCells };
+    this.setState({
+      sheetData: newSheetData
+    });
+  }
+
   render() {
     const { sheetData } = this.state;
     return (
       <div className="GridContainer">
+        <h3>{sheetData.sheetTitle}</h3>
         <div className="GridRow">
         { sheetData.headers.map(header => (
           <div className="GridCol" key={header.id}>
@@ -37,7 +52,12 @@ class App extends Component {
           <div className="GridRow" key={index}>
             { rowData.map(cell => (
               <div className="GridCol" key={cell.id}>
-                <input type="text" className="GridCell" value={cell.val} />
+                <input
+                  type="text"
+                  className="GridCell"
+                  value={cell.val}
+                  onChange={(e) => this.setCellValue(e.target.value, cell.id)}
+                />
               </div>
             )) }
             <div className="GridCol GridDisabled">
@@ -49,4 +69,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default GridContainer;
