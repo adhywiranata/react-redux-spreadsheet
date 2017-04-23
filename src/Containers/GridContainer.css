@@ -21,6 +21,10 @@
   align-items: center;
 }
 
+.GridDisabled {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .GridCell {
   border: 0;
   width: 96%;
