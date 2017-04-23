@@ -37,7 +37,13 @@ class GridContainer extends Component {
   }
 
   addRow() {
-
+    const { sheetData } = this.state;
+    const cellRowsTailId = sheetData.cells[sheetData.cells.length - 1][0].id;
+    const cellLastRow = cellRowsTailId.substring(1);
+    const newRow = sheetData.headers.map(header => ({ id: header.id + (cellLastRow + 1), val: '' }) );
+    this.setState({
+      sheetData: { ...sheetData, cells: [ ...sheetData.cells, newRow ] },
+    });
   }
 
   addColumn() {
