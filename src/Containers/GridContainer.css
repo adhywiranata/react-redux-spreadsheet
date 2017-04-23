@@ -1,0 +1,51 @@
+.GridContainer {
+  flex: 1;
+  flex-direction: column;
+  background-color: white;
+  overflow-x: scroll;
+}
+
+.GridRow {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.GridCol {
+  flex: 1;
+  min-width: 25%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.GridCell {
+  border: 0;
+  width: 96%;
+  outline: none;
+  padding: 5px;
+  font-size: 1em;
+}
+
+.ColBtn {
+  width: 100%;
+  background-color: #F5F5F5;
+  font-size: 1.2em;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+}
+
+.ActionBtn {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #333;
+  font-size: 1.2em;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  font-weight: bold;
+}
