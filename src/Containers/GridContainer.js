@@ -30,6 +30,19 @@ class GridContainer extends Component {
     this.setCellCursor = this.setCellCursor.bind(this);
   }
 
+  componentDidMount() {
+    const localSheetData = JSON.parse(localStorage.getItem('sheetData'));
+    if(localSheetData) {
+      this.setState({
+        sheetData: localSheetData,
+      });
+    }
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem('sheetData', JSON.stringify(this.state.sheetData));
+  }
+
   setCellValue(newCellVal, cellId) {
     const { sheetData } = this.state;
     const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
