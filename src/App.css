@@ -17,3 +17,19 @@
   flex: 0.9;
   background: #F5F5F5;
 }
+
+ul, li {
+  list-style-type: none;
+}
+
+li {
+  float: left;
+  width: 10%;
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #FFFFFF;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 5px;
+  color: teal;
+  cursor: pointer;
+}
