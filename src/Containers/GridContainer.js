@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
 import './GridContainer.css';
 
+const initialSheetData = {
+  sheetTitle: 'Sheet One',
+  headers: [
+    { id: 'A', title: 'A' },
+    { id: 'B', title: 'B' },
+    { id: 'C', title: 'C' },
+    { id: 'D', title: 'D' },
+  ],
+  cells: [
+    [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }, { id: 'D1', val: '' }],
+    [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }, { id: 'D2', val: '' }],
+    [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }, { id: 'D3', val: '' }],
+    [{ id: 'A4', val: '' }, { id: 'B4', val: '' }, { id: 'C4', val: '' }, { id: 'D4', val: '' }],
+  ],
+};
+
 class GridContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sheetData: {
-        sheetTitle: 'Sheet One',
-        headers: [
-          { id: 'A', title: 'A' },
-          { id: 'B', title: 'B' },
-          { id: 'C', title: 'C' },
-          { id: 'D', title: 'D' },
-        ],
-        cells: [
-          [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }, { id: 'D1', val: '' }],
-          [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }, { id: 'D2', val: '' }],
-          [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }, { id: 'D3', val: '' }],
-          [{ id: 'A4', val: '' }, { id: 'B4', val: '' }, { id: 'C4', val: '' }, { id: 'D4', val: '' }],
-        ],
-      },
+      sheetData: initialSheetData,
       cellCursor: 'A1',
       colCursor: '',
       isEditing: false,
@@ -165,13 +167,23 @@ class GridContainer extends Component {
     });
   }
 
+  resetSheet() {
+    this.setState({ sheetData: initialSheetData });
+  }
+
   render() {
     const { sheetData, cellCursor, colCursor } = this.state;
     return (
       <div className="GridContainer">
         <div className="SheetActionBar">
           <div className="SheetTitle"><h2>{sheetData.sheetTitle}</h2></div>
-          <button className="ActionBtn" style={{position: 'absolute', right: 0, top: 0 }}>Reset Cells</button>
+          <button
+            className="ActionBtn"
+            onClick={() => this.resetSheet() }
+            style={{position: 'absolute', right: 0, top: 0 }}
+          >
+            Reset Cells
+          </button>
         </div>
         <div className="GridScrollableWrapper" id="GridScrollableWrapper">
           <div className="GridFloat">
@@ -219,9 +231,9 @@ class GridContainer extends Component {
               ); }) }
             </div>
           ))}
-          <div className="GridFullRow">
-            <button className="ActionBtn" onClick={this.addRow}>Add More Row..</button>
-          </div>
+        </div>
+        <div style={{ marginTop: -40 }}>
+          <button className="ActionBtn" onClick={this.addRow}>Add New Row</button>
         </div>
       </div>
     );

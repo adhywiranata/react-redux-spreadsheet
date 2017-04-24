@@ -1,12 +1,12 @@
 .GridContainer {
   flex: 1;
   flex-direction: column;
+  height: 100%;
 }
 
 .GridScrollableWrapper {
   flex: 1;
   flex-direction: column;
-  background-color: white;
   overflow-x: auto;
   margin-bottom: 50px;
 }
