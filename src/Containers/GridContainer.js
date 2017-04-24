@@ -39,9 +39,13 @@ class GridContainer extends Component {
       });
     }
     document.addEventListener("keydown", (e) => {
-      const { sheetData, isEditing, cellCursor, colCursor } = this.state;
+      const { sheetData, isEditing, colCursor } = this.state;
       if(!isEditing) {
-        // 37 left, 38 up, 39 right, 40 down
+        // in order to avoid mutability to cellCursor, we make a copy of it
+        let cellCursor = this.state.cellCursor;
+        cellCursor = cellCursor === '' ? 'A1' : cellCursor;
+
+        // get cursor location
         const cellCursorCol = cellCursor.substring(0,1);
         const cellCursorRow = parseInt(cellCursor.substring(1));
 
@@ -72,7 +76,7 @@ class GridContainer extends Component {
           }
           return String.fromCharCode(char.charCodeAt(0) + increment);
         };
-        
+
         switch(e.keyCode) {
           // move left
           case 37: this.setCellCursor(moveAlphabet(cellCursorCol, -1) + cellCursorRow); break;
