@@ -26,6 +26,7 @@ class GridContainer extends Component {
     this.setCellValue = this.setCellValue.bind(this);
     this.addColumn = this.addColumn.bind(this);
     this.addRow = this.addRow.bind(this);
+    this.setCellCursor = this.setCellCursor.bind(this);
   }
 
   setCellValue(newCellVal, cellId) {
@@ -69,6 +70,10 @@ class GridContainer extends Component {
     })
   }
 
+  setCellCursor(cellDestination) {
+    this.setState({ cellCursor: cellDestination });
+  }
+
   render() {
     const { sheetData, cellCursor } = this.state;
     return (
@@ -97,7 +102,7 @@ class GridContainer extends Component {
                   value={cell.val}
                   onChange={(e) => this.setCellValue(e.target.value, cell.id)}
                 />) : (
-                  <button className="GridCellText">
+                  <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
                     {cell.val} &nbsp;
                   </button>)
                 }
