@@ -97,9 +97,9 @@ class GridContainer extends Component {
                   value={cell.val}
                   onChange={(e) => this.setCellValue(e.target.value, cell.id)}
                 />) : (
-                  <div className="GridCellText">
+                  <button className="GridCellText">
                     {cell.val} &nbsp;
-                  </div>)
+                  </button>)
                 }
               </div>
             ); }) }
