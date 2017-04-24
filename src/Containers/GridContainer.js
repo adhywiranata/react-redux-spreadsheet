@@ -22,6 +22,7 @@ class GridContainer extends Component {
       },
       cellCursor: 'A1',
       colCursor: '',
+      isEditing: false,
     }
 
     this.setCellValue = this.setCellValue.bind(this);
@@ -37,10 +38,57 @@ class GridContainer extends Component {
         sheetData: localSheetData,
       });
     }
+    document.addEventListener("keydown", (e) => {
+      const { sheetData, isEditing, cellCursor, colCursor } = this.state;
+      if(!isEditing) {
+        // 37 left, 38 up, 39 right, 40 down
+        const cellCursorCol = cellCursor.substring(0,1);
+        const cellCursorRow = parseInt(cellCursor.substring(1));
+
+        // get bottom-most cell id
+        const cellRowsTailId = sheetData.cells[sheetData.cells.length - 1][0].id;
+        const cellLastRow = parseInt(cellRowsTailId.substring(1));
+
+        // get right-most cell id
+        const headersTailId = sheetData.headers[sheetData.headers.length - 1].id;
+        const headersLastCol = String.fromCharCode(headersTailId.charCodeAt(0));
+
+        const moveNumber = (num, increment) => {
+          if(increment === -1 && num === 1) {
+            return num
+          }
+          if(increment === 1 && num === cellLastRow) {
+            return num
+          }
+          return num + increment;
+        }
+
+        const moveAlphabet = (char, increment) => {
+          if(increment === -1 && char === 'A') {
+            return char;
+          }
+          if(increment === 1 && char === headersLastCol) {
+            return char;
+          }
+          return String.fromCharCode(char.charCodeAt(0) + increment);
+        };
+        switch(e.keyCode) {
+          case 37: this.setCellCursor(moveAlphabet(cellCursorCol, -1) + cellCursorRow); break;
+          case 38: this.setCellCursor(cellCursorCol + moveNumber(cellCursorRow, -1)); break;
+          case 39: this.setCellCursor(moveAlphabet(cellCursorCol, 1) + cellCursorRow); break;
+          case 40: this.setCellCursor(cellCursorCol + moveNumber(cellCursorRow, 1)); break;
+          default: return true
+        }
+      }
+    });
   }
 
   componentDidUpdate() {
     localStorage.setItem('sheetData', JSON.stringify(this.state.sheetData));
+  }
+
+  setGridEditing(isEditing) {
+    this.setState({ isEditing });
   }
 
   setCellValue(newCellVal, cellId) {
@@ -55,7 +103,7 @@ class GridContainer extends Component {
   addRow() {
     const { sheetData } = this.state;
     const cellRowsTailId = sheetData.cells[sheetData.cells.length - 1][0].id;
-    const cellLastRow = cellRowsTailId.substring(1);
+    const cellLastRow = parseInt(cellRowsTailId.substring(1));
     const newRow = sheetData.headers.map(header => ({ id: header.id + (cellLastRow + 1), val: '' }) );
     this.setState({
       sheetData: { ...sheetData, cells: [ ...sheetData.cells, newRow ] },
@@ -116,8 +164,9 @@ class GridContainer extends Component {
                   type="text"
                   value={header.title}
                   className="ColInput"
-                  onFocus={(e) => e.target.select()}
+                  onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
                   onChange={(e) => this.setColTitle(header.id, e.target.value)}
+                  onBlur={() => this.setGridEditing(false)}
                 />
               ) : (
                 <button className="ColBtn" onClick={() => this.setColCursor(header.id)}>{header.title}</button>
@@ -138,7 +187,8 @@ class GridContainer extends Component {
                   className="GridCellInput"
                   value={cell.val}
                   onChange={(e) => this.setCellValue(e.target.value, cell.id)}
-                  onFocus={(e) => e.target.select()}
+                  onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
+                  onBlur={() => this.setGridEditing(false)}
                 />) : (
                   <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
                     {cell.val} &nbsp;
