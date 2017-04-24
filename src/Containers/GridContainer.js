@@ -19,7 +19,8 @@ class GridContainer extends Component {
           [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }, { id: 'D3', val: '' }],
           [{ id: 'A4', val: '' }, { id: 'B4', val: '' }, { id: 'C4', val: '' }, { id: 'D4', val: '' }],
         ],
-      }
+      },
+      cellCursor: 'A1',
     }
 
     this.setCellValue = this.setCellValue.bind(this);
@@ -69,7 +70,7 @@ class GridContainer extends Component {
   }
 
   render() {
-    const { sheetData } = this.state;
+    const { sheetData, cellCursor } = this.state;
     return (
       <div className="GridContainer">
         <h3>{sheetData.sheetTitle}</h3>
@@ -85,16 +86,23 @@ class GridContainer extends Component {
         </div>
         { sheetData.cells.map((rowData, index) => (
           <div className="GridRow" key={index}>
-            { rowData.map(cell => (
-              <div className="GridCol" key={cell.id}>
+            { rowData.map(cell => {
+              let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
+              return (
+              <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
+                { cell.id === cellCursor ? (
                 <input
                   type="text"
-                  className="GridCell"
+                  className="GridCellInput"
                   value={cell.val}
                   onChange={(e) => this.setCellValue(e.target.value, cell.id)}
-                />
+                />) : (
+                  <div className="GridCellText">
+                    {cell.val} &nbsp;
+                  </div>)
+                }
               </div>
-            )) }
+            ); }) }
           </div>
         ))}
         <div className="GridFullRow">

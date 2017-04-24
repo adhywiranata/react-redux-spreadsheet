@@ -35,11 +35,32 @@
   align-items: center;
 }
 
+.GridCell:hover {
+  border: 1px solid #A2DED0;
+}
+
+.CellSelected {
+  border: 1px solid #1BBC9B;
+}
+
 .GridDisabled {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.GridCell {
+.GridCellText {
+  width: 100%;
+  padding: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version */
+}
+
+.GridCellInput {
   border: 0;
   width: 96%;
   outline: none;
