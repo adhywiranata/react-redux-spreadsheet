@@ -39,7 +39,7 @@ class GridContainer extends Component {
       });
     }
     document.addEventListener("keydown", (e) => {
-      const { sheetData, isEditing, colCursor } = this.state;
+      const { sheetData, isEditing } = this.state;
       if(!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
         let cellCursor = this.state.cellCursor;
@@ -47,11 +47,11 @@ class GridContainer extends Component {
 
         // get cursor location
         const cellCursorCol = cellCursor.substring(0,1);
-        const cellCursorRow = parseInt(cellCursor.substring(1));
+        const cellCursorRow = parseInt(cellCursor.substring(1), 10);
 
         // get bottom-most cell id
         const cellRowsTailId = sheetData.cells[sheetData.cells.length - 1][0].id;
-        const cellLastRow = parseInt(cellRowsTailId.substring(1));
+        const cellLastRow = parseInt(cellRowsTailId.substring(1), 10);
 
         // get right-most cell id
         const headersTailId = sheetData.headers[sheetData.headers.length - 1].id;
@@ -114,7 +114,7 @@ class GridContainer extends Component {
   addRow() {
     const { sheetData } = this.state;
     const cellRowsTailId = sheetData.cells[sheetData.cells.length - 1][0].id;
-    const cellLastRow = parseInt(cellRowsTailId.substring(1));
+    const cellLastRow = parseInt(cellRowsTailId.substring(1), 10);
     const newRow = sheetData.headers.map(header => ({ id: header.id + (cellLastRow + 1), val: '' }) );
     this.setState({
       sheetData: { ...sheetData, cells: [ ...sheetData.cells, newRow ] },
