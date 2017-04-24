@@ -83,12 +83,14 @@
 
 .ColBtn {
   width: 100%;
-  background-color: #F5F5F5;
-  font-size: 1.2em;
+  height: 100%;
+  background-color: #444444;
+  color: #FFFFFF;
+  font-size: 1em;
+  padding: 5px;
   border: 0;
   cursor: pointer;
   outline: none;
-  font-weight: bold;
 }
 
 .ColInput {
