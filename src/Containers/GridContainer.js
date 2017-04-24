@@ -101,6 +101,7 @@ class GridContainer extends Component {
                   className="GridCellInput"
                   value={cell.val}
                   onChange={(e) => this.setCellValue(e.target.value, cell.id)}
+                  onFocus={(e) => e.target.select()}
                 />) : (
                   <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
                     {cell.val} &nbsp;
