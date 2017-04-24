@@ -91,6 +91,16 @@
   font-weight: bold;
 }
 
+.ColInput {
+  background-color: #FDFDFD;
+  text-align: center;
+  border: 0;
+  width: 100%;
+  outline: none;
+  padding: 5px;
+  font-size: 1em;
+}
+
 .ActionBtn {
   width: 100%;
   background-color: #1BBC9B;

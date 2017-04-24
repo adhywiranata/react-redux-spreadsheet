@@ -21,6 +21,7 @@ class GridContainer extends Component {
         ],
       },
       cellCursor: 'A1',
+      colCursor: '',
     }
 
     this.setCellValue = this.setCellValue.bind(this);
@@ -71,11 +72,23 @@ class GridContainer extends Component {
   }
 
   setCellCursor(cellDestination) {
-    this.setState({ cellCursor: cellDestination });
+    this.setState({ cellCursor: cellDestination, colCursor: '' });
+  }
+
+  setColCursor(colDestination) {
+    this.setState({ colCursor: colDestination, cellCursor: '' });
+  }
+
+  setColTitle(colId, newColTitle) {
+    const { sheetData } = this.state;
+    const newHeaders = sheetData.headers.map(header => header.id === colId ? {...header, title: newColTitle} : header);
+    this.setState({
+      sheetData: {...sheetData, headers: newHeaders },
+    });
   }
 
   render() {
-    const { sheetData, cellCursor } = this.state;
+    const { sheetData, cellCursor, colCursor } = this.state;
     return (
       <div className="GridContainer">
         <h3>{sheetData.sheetTitle}</h3>
@@ -85,7 +98,18 @@ class GridContainer extends Component {
         <div className="GridRow">
         { sheetData.headers.map(header => (
           <div className="GridCol" key={header.id}>
-            <button className="ColBtn">{header.title}</button>
+            { colCursor === header.id ? (
+                <input
+                  type="text"
+                  value={header.title}
+                  className="ColInput"
+                  onFocus={(e) => e.target.select()}
+                  onChange={(e) => this.setColTitle(header.id, e.target.value)}
+                />
+              ) : (
+                <button className="ColBtn" onClick={() => this.setColCursor(header.id)}>{header.title}</button>
+              )
+            }
           </div>
         ))}
         </div>
