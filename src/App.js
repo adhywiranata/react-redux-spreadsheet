@@ -6,6 +6,8 @@ import {
 } from 'react-router-dom'
 
 import GridContainer from './Containers/GridContainer';
+import ChartContainer from './Containers/ChartContainer';
+
 import './App.css';
 
 class App extends Component {
@@ -26,7 +28,7 @@ class App extends Component {
           </div>
           <div className="SheetContainer">
             <Route exact path="/" component={GridContainer} />
-            <Router path="/charts" component={GridContainer} />
+            <Route path="/charts" component={ChartContainer} />
           </div>
         </div>
       </Router>

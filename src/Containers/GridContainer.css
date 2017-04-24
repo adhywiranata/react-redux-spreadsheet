@@ -1,9 +1,21 @@
 .GridContainer {
   flex: 1;
   flex-direction: column;
+}
+
+.GridScrollableWrapper {
+  flex: 1;
+  flex-direction: column;
   background-color: white;
   overflow-x: auto;
   margin-bottom: 50px;
+}
+
+.SheetActionBar {
+  position: relative;
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .GridRow {
@@ -23,6 +35,10 @@
   position: absolute;
   top: 300;
   right: 0;
+}
+
+.SheetTitle {
+  flex: 1;
 }
 
 .GridCol {
@@ -104,7 +120,7 @@
 }
 
 .ActionBtn {
-  width: 100%;
+  flex: 1;
   background-color: #1BBC9B;
   color: #FFFFFF;
   font-size: 1.2em;

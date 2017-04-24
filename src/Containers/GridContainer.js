@@ -6,7 +6,7 @@ class GridContainer extends Component {
     super(props);
     this.state = {
       sheetData: {
-        sheetTitle: 'just another',
+        sheetTitle: 'Sheet One',
         headers: [
           { id: 'A', title: 'A' },
           { id: 'B', title: 'B' },
@@ -38,7 +38,10 @@ class GridContainer extends Component {
         sheetData: localSheetData,
       });
     }
+
     document.addEventListener("keydown", (e) => {
+      let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
+      console.log(gridScollableWrapper.scrollLeft);
       const { sheetData, isEditing } = this.state;
       if(!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
@@ -74,6 +77,9 @@ class GridContainer extends Component {
           if(increment === 1 && char === headersLastCol) {
             return char;
           }
+          if(increment > 0) { gridScollableWrapper.scrollLeft += 100; }
+          if(increment < 0) { gridScollableWrapper.scrollLeft -= 100; }
+
           return String.fromCharCode(char.charCodeAt(0) + increment);
         };
 
@@ -163,54 +169,59 @@ class GridContainer extends Component {
     const { sheetData, cellCursor, colCursor } = this.state;
     return (
       <div className="GridContainer">
-        <h3>{sheetData.sheetTitle}</h3>
-        <div className="GridFloat">
-          <button className="ActionBtn" onClick={this.addColumn}>+</button>
+        <div className="SheetActionBar">
+          <div className="SheetTitle"><h2>{sheetData.sheetTitle}</h2></div>
+          <button className="ActionBtn" style={{position: 'absolute', right: 0, top: 0 }}>Reset Cells</button>
         </div>
-        <div className="GridRow">
-        { sheetData.headers.map(header => (
-          <div className="GridCol" key={header.id}>
-            { colCursor === header.id ? (
-                <input
-                  type="text"
-                  value={header.title}
-                  className="ColInput"
-                  onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
-                  onChange={(e) => this.setColTitle(header.id, e.target.value)}
-                  onBlur={() => this.setGridEditing(false)}
-                />
-              ) : (
-                <button className="ColBtn" onClick={() => this.setColCursor(header.id)}>{header.title}</button>
-              )
-            }
+        <div className="GridScrollableWrapper" id="GridScrollableWrapper">
+          <div className="GridFloat">
+            <button className="ActionBtn" onClick={this.addColumn}>+</button>
           </div>
-        ))}
-        </div>
-        { sheetData.cells.map((rowData, index) => (
-          <div className="GridRow" key={index}>
-            { rowData.map(cell => {
-              let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
-              return (
-              <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
-                { cell.id === cellCursor ? (
-                <input
-                  type="text"
-                  className="GridCellInput"
-                  value={cell.val}
-                  onChange={(e) => this.setCellValue(e.target.value, cell.id)}
-                  onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
-                  onBlur={() => this.setGridEditing(false)}
-                />) : (
-                  <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
-                    {cell.val} &nbsp;
-                  </button>)
-                }
-              </div>
-            ); }) }
+          <div className="GridRow">
+          { sheetData.headers.map(header => (
+            <div className="GridCol" key={header.id}>
+              { colCursor === header.id ? (
+                  <input
+                    type="text"
+                    value={header.title}
+                    className="ColInput"
+                    onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
+                    onChange={(e) => this.setColTitle(header.id, e.target.value)}
+                    onBlur={() => this.setGridEditing(false)}
+                  />
+                ) : (
+                  <button className="ColBtn" onClick={() => this.setColCursor(header.id)}>{header.title}</button>
+                )
+              }
+            </div>
+          ))}
           </div>
-        ))}
-        <div className="GridFullRow">
-          <button className="ActionBtn" onClick={this.addRow}>Add More Row..</button>
+          { sheetData.cells.map((rowData, index) => (
+            <div className="GridRow" key={index}>
+              { rowData.map(cell => {
+                let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
+                return (
+                <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
+                  { cell.id === cellCursor ? (
+                  <input
+                    type="text"
+                    className="GridCellInput"
+                    value={cell.val}
+                    onChange={(e) => this.setCellValue(e.target.value, cell.id)}
+                    onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
+                    onBlur={() => this.setGridEditing(false)}
+                  />) : (
+                    <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
+                      {cell.val} &nbsp;
+                    </button>)
+                  }
+                </div>
+              ); }) }
+            </div>
+          ))}
+          <div className="GridFullRow">
+            <button className="ActionBtn" onClick={this.addRow}>Add More Row..</button>
+          </div>
         </div>
       </div>
     );
