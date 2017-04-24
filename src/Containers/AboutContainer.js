@@ -6,6 +6,9 @@ class AboutContainer extends Component {
     return (
       <div>
         <h2>About</h2>
+        <p>This is a simple spreadsheet using React and Redux(not yet). Made by
+          <a href="https://github.com/adhywiranata" target="_blank">Adhy Wiranata</a>
+        </p>
       </div>
     );
   }
