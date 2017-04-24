@@ -5,56 +5,94 @@ class ChartContainer extends Component {
 
   componentDidMount() {
     //Width and height
-		var svgWidth = 1000;
-		var svgHeight = 200;
-		var barPadding = 1;
-		var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-						11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+		// var svgWidth = 1000;
+		// var svgHeight = 400;
+		var barPadding = 5;
+		var dataset = [ 25, 5, 10, 13, 19, 21, 25, 22, 18, 15 ];
+
 		//Create SVG element
 		var svg = d3.select("#SvgWrapper")
 					.append("svg")
-					.attr("width", svgWidth)
-					.attr("height", svgHeight);
+					.style("width", '100%')
+					.style("height", '100%')
+         //responsive SVG needs these 2 attributes and no width and height attr
+          .attr("preserveAspectRatio", "xMinYMin meet")
+          .style("padding", 50)
+          .style("background-color", "#FFFFFF");
+
+    var svgWidth = parseInt(svg.style('width').substring(0, 3), 10) * 10;
+    var svgHeight = parseInt(svg.style('height').substring(0, 3), 10);
+
+    var yScale = d3.scaleLinear()
+              .domain([0, d3.max(dataset)])
+              .range([svgHeight, 0]);
+
+    var xScale = d3.scaleLinear()
+              .domain([0, dataset.length])
+              .range([0, svgWidth]);
+
+    var yAxis = d3.axisLeft(yScale).ticks(d3.max(dataset) / 5);
+
+    var xAxis = d3.axisBottom(xScale).ticks(dataset.length);
+
+    svg.append('g')
+      .call(yAxis);
+
+      svg.append('g')
+        .call(xAxis)
+        .attr("transform", "translate(0," + svgHeight + ")");
+
 		svg.selectAll("rect")
 		   .data(dataset)
 		   .enter()
-		   .append("rect")
-		   .attr("x", function(dataVal, iterationCounter) {
-		   		return iterationCounter * (svgWidth / dataset.length);
-		   })
-		   .attr("y", function(dataVal) {
-		   		return svgHeight - (dataVal * 4);
-		   })
-		   .attr("width", svgWidth / dataset.length - barPadding)
-		   .attr("height", function(dataVal) {
-		   		return dataVal * 4;
-		   })
-		   .attr("fill", function(dataVal) {
-				return "rgb(0, 0, " + (dataVal * 10) + ")";
-		   });
+  		   .append("rect")
+  		   .attr("fill", function(d) {
+  				return "#1BBC9B";
+  		   })
+         .attr("x", function(d, i) {
+  		   		return i * (svgWidth / dataset.length);
+  		   })
+  		   .attr("width", svgWidth / dataset.length - barPadding)
+  		   .attr("y", function(d) {
+            return svgHeight;
+  		   })
+  		   .attr("height", function(d) {
+            return 0;
+  		   })
+       .transition()
+         .duration(400)
+         .ease(d3.easeLinear)
+         .delay(function(d, i) { return i * 50 })
+  		   .attr("y", function(d) {
+            return yScale(d);
+  		   })
+  		   .attr("height", function(d) {
+            return svgHeight - yScale(d);
+  		   });
+
 		svg.selectAll("text")
 		   .data(dataset)
 		   .enter()
 		   .append("text")
-		   .text(function(dataVal) {
-		   		return dataVal;
+		   .text(function(d) {
+		   		return d;
 		   })
 		   .attr("text-anchor", "middle")
-		   .attr("x", function(dataVal, iterationCounter) {
-		   		return iterationCounter * (svgWidth / dataset.length) + (svgWidth / dataset.length - barPadding) / 2;
+		   .attr("x", function(d, i) {
+		   		return i * (svgWidth / dataset.length) + (svgWidth / dataset.length - barPadding) / 2;
 		   })
-		   .attr("y", function(dataVal) {
-		   		return svgHeight - (dataVal * 4) + 14;
+		   .attr("y", function(d) {
+          return yScale(d) + 20;
 		   })
-		   .attr("font-family", "sans-serif")
-		   .attr("font-size", "11px")
+		   .attr("font-size", "15px")
 		   .attr("fill", "white");
   }
+
   render() {
     return (
       <div>
-        <h2>Charts</h2>
-        <div id="SvgWrapper"></div>
+        <h2>Charts (Coming Soon)</h2>
+        <div id="SvgWrapper" style={{ width: '70%', height: 300, margin: '0 auto' }}></div>
       </div>
     );
   }
