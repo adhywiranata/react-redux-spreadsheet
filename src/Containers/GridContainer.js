@@ -72,11 +72,18 @@ class GridContainer extends Component {
           }
           return String.fromCharCode(char.charCodeAt(0) + increment);
         };
+        
         switch(e.keyCode) {
+          // move left
           case 37: this.setCellCursor(moveAlphabet(cellCursorCol, -1) + cellCursorRow); break;
+          // move up
           case 38: this.setCellCursor(cellCursorCol + moveNumber(cellCursorRow, -1)); break;
+          // move right
           case 39: this.setCellCursor(moveAlphabet(cellCursorCol, 1) + cellCursorRow); break;
+          // move down
           case 40: this.setCellCursor(cellCursorCol + moveNumber(cellCursorRow, 1)); break;
+          // tab (move right)
+          case 9: this.setCellCursor(moveAlphabet(cellCursorCol, 1) + cellCursorRow); break;
           default: return true
         }
       }
