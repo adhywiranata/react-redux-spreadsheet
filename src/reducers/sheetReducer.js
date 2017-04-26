@@ -1,4 +1,11 @@
-import { LOAD_SHEET_DATA } from '../actions/constants';
+import {
+  LOAD_SHEET_DATA,
+  RESET_SHEET_DATA,
+  ADD_SHEET_ROW,
+  ADD_SHEET_COLUMN,
+  SET_COLUMN_TITLE,
+  SET_CELL_VALUE,
+} from '../actions/constants';
 
 const initialState = {
   sheetTitle: 'Sheet One',
@@ -16,9 +23,20 @@ const initialState = {
   ],
 };
 
+const setCellValue = (state, { newCellVal, cellId }) => {
+  const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
+  const newCells = state.cells.map(row => row.map(updateCellVal));
+  return { ...state, cells: newCells };
+}
+
 const sheetReducer = (state = initialState, action) => {
   switch(action.type) {
     case LOAD_SHEET_DATA: return action.payload.sheetData;
+    case RESET_SHEET_DATA: return initialState;
+    case ADD_SHEET_ROW: return state;
+    case ADD_SHEET_COLUMN: return state;
+    case SET_COLUMN_TITLE: return state;
+    case SET_CELL_VALUE: return setCellValue(state, action.payload);
     default: return state;
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadSheetData } from '../actions';
+import { loadSheetData, setCellValue } from '../actions';
 import './GridContainer.css';
 
 const initialSheetData = {
@@ -30,7 +30,6 @@ class GridContainer extends Component {
       isEditing: false,
     }
 
-    this.setCellValue = this.setCellValue.bind(this);
     this.addColumn = this.addColumn.bind(this);
     this.addRow = this.addRow.bind(this);
     this.setCellCursor = this.setCellCursor.bind(this);
@@ -44,7 +43,7 @@ class GridContainer extends Component {
 
     document.addEventListener("keydown", (e) => {
       let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
-      console.log(gridScollableWrapper.scrollLeft);
+      // console.log(gridScollableWrapper.scrollLeft);
       const { sheetData, isEditing } = this.state;
       if(!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
@@ -103,22 +102,30 @@ class GridContainer extends Component {
     });
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('sheetData', JSON.stringify(this.state.sheetData));
+  componentWillReceiveProps(nextProps) {
+    localStorage.setItem('sheetData', JSON.stringify(nextProps.sheetData));
   }
 
   setGridEditing(isEditing) {
     this.setState({ isEditing });
   }
 
-  setCellValue(newCellVal, cellId) {
-    const { sheetData } = this.state;
-    const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
-    const newCells = sheetData.cells.map(row => row.map(updateCellVal));
-    this.setState({
-      sheetData: { ...sheetData, cells: newCells },
-    });
+  setCellCursor(cellDestination) {
+    this.setState({ cellCursor: cellDestination, colCursor: '' });
   }
+
+  setColCursor(colDestination) {
+    this.setState({ colCursor: colDestination, cellCursor: '' });
+  }
+
+  // setCellValue(newCellVal, cellId) {
+  //   const { sheetData } = this.state;
+  //   const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
+  //   const newCells = sheetData.cells.map(row => row.map(updateCellVal));
+  //   this.setState({
+  //     sheetData: { ...sheetData, cells: newCells },
+  //   });
+  // }
 
   addRow() {
     const { sheetData } = this.state;
@@ -152,14 +159,6 @@ class GridContainer extends Component {
     })
   }
 
-  setCellCursor(cellDestination) {
-    this.setState({ cellCursor: cellDestination, colCursor: '' });
-  }
-
-  setColCursor(colDestination) {
-    this.setState({ colCursor: colDestination, cellCursor: '' });
-  }
-
   setColTitle(colId, newColTitle) {
     const { sheetData } = this.state;
     const newHeaders = sheetData.headers.map(header => header.id === colId ? {...header, title: newColTitle} : header);
@@ -173,8 +172,8 @@ class GridContainer extends Component {
   }
 
   render() {
-    const { sheetData, gridCursor } = this.props;
-    const { cellCursor, colCursor } = gridCursor;
+    const { sheetData } = this.props;
+    const { cellCursor, colCursor } = this.state;
 
     return (
       <div className="GridContainer">
@@ -222,7 +221,7 @@ class GridContainer extends Component {
                     type="text"
                     className="GridCellInput"
                     value={cell.val}
-                    onChange={(e) => this.setCellValue(e.target.value, cell.id)}
+                    onChange={(e) => this.props.setCellValue(e.target.value, cell.id)}
                     onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
                     onBlur={() => this.setGridEditing(false)}
                   />) : (
@@ -245,11 +244,11 @@ class GridContainer extends Component {
 
 const mapStateToProps = state => ({
   sheetData: state.sheetData,
-  gridCursor: state.gridCursor,
 });
 
 const mapDispatchToProps = dispatch => ({
   loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
+  setCellValue: (newCellVal, cellId) => dispatch(setCellValue(newCellVal, cellId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GridContainer);
