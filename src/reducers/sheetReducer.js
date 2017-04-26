@@ -29,11 +29,18 @@ const setCellValue = (state, { newCellVal, cellId }) => {
   return { ...state, cells: newCells };
 }
 
+const addSheetRow = (state) => {
+  const cellRowsTailId = state.cells[state.cells.length - 1][0].id;
+  const cellLastRow = parseInt(cellRowsTailId.substring(1), 10);
+  const newRow = state.headers.map(header => ({ id: header.id + (cellLastRow + 1), val: '' }) );
+  return { ...state, cells: [ ...state.cells, newRow ] };
+}
+
 const sheetReducer = (state = initialState, action) => {
   switch(action.type) {
     case LOAD_SHEET_DATA: return action.payload.sheetData;
     case RESET_SHEET_DATA: return initialState;
-    case ADD_SHEET_ROW: return state;
+    case ADD_SHEET_ROW: return addSheetRow(state);
     case ADD_SHEET_COLUMN: return state;
     case SET_COLUMN_TITLE: return state;
     case SET_CELL_VALUE: return setCellValue(state, action.payload);

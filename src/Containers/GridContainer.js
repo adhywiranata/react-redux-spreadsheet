@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadSheetData, setCellValue } from '../actions';
+import { loadSheetData, setCellValue, addSheetRow } from '../actions';
 import './GridContainer.css';
 
 const initialSheetData = {
@@ -31,7 +31,6 @@ class GridContainer extends Component {
     }
 
     this.addColumn = this.addColumn.bind(this);
-    this.addRow = this.addRow.bind(this);
     this.setCellCursor = this.setCellCursor.bind(this);
   }
 
@@ -117,15 +116,6 @@ class GridContainer extends Component {
   setColCursor(colDestination) {
     this.setState({ colCursor: colDestination, cellCursor: '' });
   }
-
-  // setCellValue(newCellVal, cellId) {
-  //   const { sheetData } = this.state;
-  //   const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
-  //   const newCells = sheetData.cells.map(row => row.map(updateCellVal));
-  //   this.setState({
-  //     sheetData: { ...sheetData, cells: newCells },
-  //   });
-  // }
 
   addRow() {
     const { sheetData } = this.state;
@@ -235,7 +225,7 @@ class GridContainer extends Component {
           ))}
         </div>
         <div style={{ marginTop: -40 }}>
-          <button className="ActionBtn" onClick={this.addRow}>Add New Row</button>
+          <button className="ActionBtn" onClick={this.props.addSheetRow}>Add New Row</button>
         </div>
       </div>
     );
@@ -248,6 +238,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
+  addSheetRow: () => dispatch(addSheetRow()),
   setCellValue: (newCellVal, cellId) => dispatch(setCellValue(newCellVal, cellId)),
 });
 

@@ -10,6 +10,14 @@ export const setCellValue = (newCellVal, cellId) => ({
   payload: { newCellVal, cellId },
 });
 
+export const addSheetRow = () => ({
+  type: ActionTypes.ADD_SHEET_ROW,
+});
+
+export const addSheetColumn = () => ({
+  type: ActionTypes.ADD_SHEET_COLUMN,
+});
+
 export const resetSheetData = () => ({
   type: ActionTypes.RESET_SHEET_DATA,
 })
