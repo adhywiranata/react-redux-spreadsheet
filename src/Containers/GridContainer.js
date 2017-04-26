@@ -174,7 +174,9 @@ class GridContainer extends Component {
   }
 
   render() {
-    const { sheetData, cellCursor, colCursor } = this.props;
+    const { sheetData, gridCursor } = this.props;
+    const { cellCursor, colCursor } = gridCursor;
+    
     return (
       <div className="GridContainer">
         <div className="SheetActionBar">
@@ -243,7 +245,8 @@ class GridContainer extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  sheetData: state.sheetData
+  sheetData: state.sheetData,
+  gridCursor: state.gridCursor,
 });
 
 export default connect(mapStateToProps, null)(GridContainer);

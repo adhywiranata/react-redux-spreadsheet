@@ -4,7 +4,7 @@ const initialState = {
   isEditing: false,
 };
 
-const gridCursorReducer = (state = initialState, action) {
+const gridCursorReducer = (state = initialState, action) => {
   return state;
 };
 
