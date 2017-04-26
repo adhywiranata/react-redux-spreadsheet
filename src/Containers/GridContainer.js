@@ -1,30 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadSheetData, setCellValue, addSheetRow, addSheetColumn } from '../actions';
+import { loadSheetData, setCellValue, setColumnValue, addSheetRow, addSheetColumn } from '../actions';
 import './GridContainer.css';
-
-const initialSheetData = {
-  sheetTitle: 'Sheet One',
-  headers: [
-    { id: 'A', title: 'A' },
-    { id: 'B', title: 'B' },
-    { id: 'C', title: 'C' },
-    { id: 'D', title: 'D' },
-  ],
-  cells: [
-    [{ id: 'A1', val: '' }, { id: 'B1', val: '' }, { id: 'C1', val: '' }, { id: 'D1', val: '' }],
-    [{ id: 'A2', val: '' }, { id: 'B2', val: '' }, { id: 'C2', val: '' }, { id: 'D2', val: '' }],
-    [{ id: 'A3', val: '' }, { id: 'B3', val: '' }, { id: 'C3', val: '' }, { id: 'D3', val: '' }],
-    [{ id: 'A4', val: '' }, { id: 'B4', val: '' }, { id: 'C4', val: '' }, { id: 'D4', val: '' }],
-  ],
-};
 
 class GridContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      sheetData: initialSheetData,
       cellCursor: 'A1',
       colCursor: '',
       isEditing: false,
@@ -42,7 +25,8 @@ class GridContainer extends Component {
     document.addEventListener("keydown", (e) => {
       let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
       // console.log(gridScollableWrapper.scrollLeft);
-      const { sheetData, isEditing } = this.state;
+      const { sheetData } = this.props;
+      const { isEditing } = this.state; 
       if(!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
         let cellCursor = this.state.cellCursor;
@@ -116,38 +100,8 @@ class GridContainer extends Component {
     this.setState({ colCursor: colDestination, cellCursor: '' });
   }
 
-  addColumn() {
-    const { sheetData } = this.state;
-
-    const headersTailId = sheetData.headers[sheetData.headers.length - 1].id;
-    const headerNewId = String.fromCharCode(headersTailId.charCodeAt(0) + 1);
-    const newHeader = {
-      id: headerNewId,
-      title: 'Untitled Column',
-    };
-
-    const newCells = sheetData.cells.map(row => {
-      let rowNumber = row[0].id.substring(1);
-      let newCell = { id: headerNewId + rowNumber, val: '' };
-      return [ ...row, newCell ]
-    });
-
-    const newHeaders = [...sheetData.headers, newHeader];
-    this.setState({
-      sheetData: { ...sheetData, headers: newHeaders, cells: newCells },
-    })
-  }
-
-  setColTitle(colId, newColTitle) {
-    const { sheetData } = this.state;
-    const newHeaders = sheetData.headers.map(header => header.id === colId ? {...header, title: newColTitle} : header);
-    this.setState({
-      sheetData: {...sheetData, headers: newHeaders },
-    });
-  }
-
   resetSheet() {
-    this.setState({ sheetData: initialSheetData });
+    this.setState({ sheetData: '' });
   }
 
   render() {
@@ -179,7 +133,7 @@ class GridContainer extends Component {
                     value={header.title}
                     className="ColInput"
                     onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
-                    onChange={(e) => this.setColTitle(header.id, e.target.value)}
+                    onChange={(e) => this.props.setColumnValue(e.target.value, header.id)}
                     onBlur={() => this.setGridEditing(false)}
                   />
                 ) : (
@@ -229,6 +183,7 @@ const mapDispatchToProps = dispatch => ({
   loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
   addSheetRow: () => dispatch(addSheetRow()),
   addSheetColumn: () => dispatch(addSheetColumn()),
+  setColumnValue: (newColVal, colId) => dispatch(setColumnValue(newColVal, colId)),
   setCellValue: (newCellVal, cellId) => dispatch(setCellValue(newCellVal, cellId)),
 });
 

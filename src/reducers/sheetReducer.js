@@ -27,7 +27,12 @@ const setCellValue = (state, { newCellVal, cellId }) => {
   const updateCellVal = cell => cell.id === cellId ? {...cell, val: newCellVal} : cell;
   const newCells = state.cells.map(row => row.map(updateCellVal));
   return { ...state, cells: newCells };
-}
+};
+
+const setColumnTitle = (state, { newColVal, colId }) => {
+  const newHeaders = state.headers.map(header => header.id === colId ? {...header, title: newColVal} : header);
+  return {...state, headers: newHeaders };
+};
 
 const addSheetRow = (state) => {
   const cellRowsTailId = state.cells[state.cells.length - 1][0].id;
@@ -60,7 +65,7 @@ const sheetReducer = (state = initialState, action) => {
     case RESET_SHEET_DATA: return initialState;
     case ADD_SHEET_ROW: return addSheetRow(state);
     case ADD_SHEET_COLUMN: return addSheetColumn(state);
-    case SET_COLUMN_TITLE: return state;
+    case SET_COLUMN_TITLE: return setColumnTitle(state, action.payload);
     case SET_CELL_VALUE: return setCellValue(state, action.payload);
     default: return state;
   }
