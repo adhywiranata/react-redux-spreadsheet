@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
 import './GridContainer.css';
 
 const initialSheetData = {
@@ -40,7 +42,7 @@ class GridContainer extends Component {
         sheetData: localSheetData,
       });
     }
-    
+
     document.addEventListener("keydown", (e) => {
       let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
       console.log(gridScollableWrapper.scrollLeft);
@@ -190,7 +192,7 @@ class GridContainer extends Component {
             <button className="ActionBtn" onClick={this.addColumn}>+</button>
           </div>
           <div className="GridRow">
-          { sheetData.headers.map(header => (
+          { this.props.sheetData.headers.map(header => (
             <div className="GridCol" key={header.id}>
               { colCursor === header.id ? (
                   <input
@@ -208,7 +210,7 @@ class GridContainer extends Component {
             </div>
           ))}
           </div>
-          { sheetData.cells.map((rowData, index) => (
+          { this.props.sheetData.cells.map((rowData, index) => (
             <div className="GridRow" key={index}>
               { rowData.map(cell => {
                 let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
@@ -240,4 +242,8 @@ class GridContainer extends Component {
   }
 }
 
-export default GridContainer;
+const mapStateToProps = (state) => ({
+  sheetData: state.sheetData
+});
+
+export default connect(mapStateToProps, null)(GridContainer);
