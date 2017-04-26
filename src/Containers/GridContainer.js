@@ -174,7 +174,7 @@ class GridContainer extends Component {
   }
 
   render() {
-    const { sheetData, cellCursor, colCursor } = this.state;
+    const { sheetData, cellCursor, colCursor } = this.props;
     return (
       <div className="GridContainer">
         <div className="SheetActionBar">
@@ -192,7 +192,7 @@ class GridContainer extends Component {
             <button className="ActionBtn" onClick={this.addColumn}>+</button>
           </div>
           <div className="GridRow">
-          { this.props.sheetData.headers.map(header => (
+          { sheetData.headers.map(header => (
             <div className="GridCol" key={header.id}>
               { colCursor === header.id ? (
                   <input
@@ -210,7 +210,7 @@ class GridContainer extends Component {
             </div>
           ))}
           </div>
-          { this.props.sheetData.cells.map((rowData, index) => (
+          { sheetData.cells.map((rowData, index) => (
             <div className="GridRow" key={index}>
               { rowData.map(cell => {
                 let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
