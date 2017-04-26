@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadSheetData, setCellValue, addSheetRow } from '../actions';
+import { loadSheetData, setCellValue, addSheetRow, addSheetColumn } from '../actions';
 import './GridContainer.css';
 
 const initialSheetData = {
@@ -30,7 +30,6 @@ class GridContainer extends Component {
       isEditing: false,
     }
 
-    this.addColumn = this.addColumn.bind(this);
     this.setCellCursor = this.setCellCursor.bind(this);
   }
 
@@ -169,7 +168,7 @@ class GridContainer extends Component {
         </div>
         <div className="GridScrollableWrapper" id="GridScrollableWrapper">
           <div className="GridFloat">
-            <button className="ActionBtn" onClick={this.addColumn}>+</button>
+            <button className="ActionBtn" onClick={this.props.addSheetColumn}>+</button>
           </div>
           <div className="GridRow">
           { sheetData.headers.map(header => (
@@ -229,6 +228,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
   addSheetRow: () => dispatch(addSheetRow()),
+  addSheetColumn: () => dispatch(addSheetColumn()),
   setCellValue: (newCellVal, cellId) => dispatch(setCellValue(newCellVal, cellId)),
 });
 
