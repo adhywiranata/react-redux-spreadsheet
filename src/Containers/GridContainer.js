@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { loadSheetData } from '../actions';
 import './GridContainer.css';
 
 const initialSheetData = {
@@ -38,9 +39,7 @@ class GridContainer extends Component {
   componentDidMount() {
     const localSheetData = JSON.parse(localStorage.getItem('sheetData'));
     if(localSheetData) {
-      this.setState({
-        sheetData: localSheetData,
-      });
+      this.props.loadSheetData(localSheetData);
     }
 
     document.addEventListener("keydown", (e) => {
@@ -176,7 +175,7 @@ class GridContainer extends Component {
   render() {
     const { sheetData, gridCursor } = this.props;
     const { cellCursor, colCursor } = gridCursor;
-    
+
     return (
       <div className="GridContainer">
         <div className="SheetActionBar">
@@ -244,9 +243,13 @@ class GridContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   sheetData: state.sheetData,
   gridCursor: state.gridCursor,
 });
 
-export default connect(mapStateToProps, null)(GridContainer);
+const mapDispatchToProps = dispatch => ({
+  loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GridContainer);

@@ -1,3 +1,5 @@
+import { LOAD_SHEET_DATA } from '../actions/constants';
+
 const initialState = {
   sheetTitle: 'Sheet One',
   headers: [
@@ -15,7 +17,10 @@ const initialState = {
 };
 
 const sheetReducer = (state = initialState, action) => {
-  return state;
+  switch(action.type) {
+    case LOAD_SHEET_DATA: return action.payload.sheetData;
+    default: return state;
+  }
 }
 
 export default sheetReducer;
