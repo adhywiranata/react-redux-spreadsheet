@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadSheetData, setCellValue, setColumnValue, addSheetRow, addSheetColumn } from '../actions';
+import {
+  loadSheetData,
+  resetSheetData,
+  setCellValue,
+  setColumnValue,
+  addSheetRow,
+  addSheetColumn
+} from '../actions';
+
 import './GridContainer.css';
 
 class GridContainer extends Component {
@@ -26,7 +34,7 @@ class GridContainer extends Component {
       let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
       // console.log(gridScollableWrapper.scrollLeft);
       const { sheetData } = this.props;
-      const { isEditing } = this.state; 
+      const { isEditing } = this.state;
       if(!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
         let cellCursor = this.state.cellCursor;
@@ -100,10 +108,6 @@ class GridContainer extends Component {
     this.setState({ colCursor: colDestination, cellCursor: '' });
   }
 
-  resetSheet() {
-    this.setState({ sheetData: '' });
-  }
-
   render() {
     const { sheetData } = this.props;
     const { cellCursor, colCursor } = this.state;
@@ -114,7 +118,7 @@ class GridContainer extends Component {
           <div className="SheetTitle"><h2>{sheetData.sheetTitle}</h2></div>
           <button
             className="ActionBtn"
-            onClick={() => this.resetSheet() }
+            onClick={this.props.resetSheetData}
             style={{position: 'absolute', right: 0, top: 0 }}
           >
             Reset Cells
@@ -181,6 +185,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
+  resetSheetData: () => dispatch(resetSheetData()),
   addSheetRow: () => dispatch(addSheetRow()),
   addSheetColumn: () => dispatch(addSheetColumn()),
   setColumnValue: (newColVal, colId) => dispatch(setColumnValue(newColVal, colId)),

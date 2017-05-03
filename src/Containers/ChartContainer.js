@@ -42,6 +42,8 @@ class ChartContainer extends Component {
         .call(xAxis)
         .attr("transform", "translate(0," + svgHeight + ")");
 
+  const customElastic = d3.easeElastic.period(0.6);
+
 		svg.selectAll("rect")
 		   .data(dataset)
 		   .enter()
@@ -60,15 +62,15 @@ class ChartContainer extends Component {
             return 0;
   		   })
        .transition()
-         .duration(400)
-         .ease(d3.easeLinear)
+         .duration(2000)
+         .ease(customElastic)
          .delay(function(d, i) { return i * 50 })
-  		   .attr("y", function(d) {
+         .attr("y", function(d) {
             return yScale(d);
-  		   })
-  		   .attr("height", function(d) {
+         })
+         .attr("height", function(d) {
             return svgHeight - yScale(d);
-  		   });
+         });
 
 		svg.selectAll("text")
 		   .data(dataset)
