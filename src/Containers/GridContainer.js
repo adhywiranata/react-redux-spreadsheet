@@ -11,7 +11,7 @@ import {
 } from '../actions';
 
 import './GridContainer.css';
-import { GridCell, GridCellInput } from '../components';
+import { GridCell, GridCellInput, ActionButton } from '../components';
 
 class GridContainer extends Component {
   constructor(props) {
@@ -191,23 +191,17 @@ class GridContainer extends Component {
       <div className="GridContainer">
         <div className="SheetActionBar">
           <div className="SheetTitle"><h2>{sheetData.sheetTitle}</h2></div>
-          <button
-            className="ActionBtn"
-            onClick={this.props.resetSheetData}
-            style={{position: 'absolute', right: 0, top: 0 }}
-          >
-            Reset Cells
-          </button>
+          <ActionButton handleClick={this.props.resetSheetData} label={'Reset Cells'} align={'right'} />
         </div>
         <div className="GridScrollableWrapper" id="GridScrollableWrapper">
           <div className="GridFloat">
-            <button className="ActionBtn" onClick={this.props.addSheetColumn}>+</button>
+            <ActionButton handleClick={this.props.addSheetColumn} label={'+'} align={'right'} />
           </div>
           { this.renderGridHeaders(sheetData, colCursor) }
           { this.renderGridRow(sheetData, cellCursor) }
         </div>
-        <div style={{ marginTop: -40 }}>
-          <button className="ActionBtn" onClick={this.props.addSheetRow}>Add New Row</button>
+        <div style={{ marginTop: -40, position: 'relative' }}>
+          <ActionButton handleClick={this.props.addSheetRow} label={'Add New Row'} align={'center'} />
         </div>
       </div>
     );

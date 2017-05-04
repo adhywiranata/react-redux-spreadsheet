@@ -1,3 +1,3 @@
-import { GridCell , GridCellInput } from './GridCells';
+import { GridCell , GridCellInput, ActionButton } from './GridCells';
 
-export { GridCell, GridCellInput };
+export { GridCell, GridCellInput, ActionButton };
