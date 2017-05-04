@@ -12,13 +12,33 @@ class ChartContainer extends Component {
     this.changeDataset = this.changeDataset.bind(this);
   }
 
+  componentDidMount() {
+    const { dataset } = this.state;
+    this.renderChart(dataset);
+    window.addEventListener('resize', () => this.renderChart(dataset));
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    this.updateChart(nextState.dataset);
+  }
+
+  changeDataset() {
+    let randBar = _.random(0, this.state.dataset.length - 1);
+    let randVal = _.multiply(_.random(1, 3), 5);
+    let randOp = _.random(0, 1);
+    const newDataset = this.state.dataset.map((val, i) => i === randBar ? randOp === 0 ? val <= 0 ? val - randVal : val : val + randVal : val)
+    this.setState({
+      dataset: newDataset
+    })
+  }
+
   renderChart(dataset) {
     const barPadding = 5;
     const customElasticEasing = d3.easeElastic.period(0.6);
 
     d3.select('.chart-svg').remove();
 
-    var svg = d3.select('#SvgWrapper')
+    const svg = d3.select('#SvgWrapper')
           .append('svg')
           .attr('class', 'chart-svg')
           .style('width', '100%')
@@ -26,20 +46,20 @@ class ChartContainer extends Component {
           .style('padding', 50)
           .style('background-color', '#FFFFFF');
 
-    var svgWidth = parseInt(svg.style('width').replace('px', ''), 10);
-    var svgHeight = parseInt(svg.style('height').replace('px', ''), 10);
+    const svgWidth = parseInt(svg.style('width').replace('px', ''), 10);
+    const svgHeight = parseInt(svg.style('height').replace('px', ''), 10);
 
-    var yScale = d3.scaleLinear()
+    const yScale = d3.scaleLinear()
               .domain([0, d3.max(dataset)])
               .range([svgHeight, 0]);
 
-    var xScale = d3.scaleLinear()
+    const xScale = d3.scaleLinear()
               .domain([0, dataset.length])
               .range([0, svgWidth]);
 
-    var yAxis = d3.axisLeft(yScale).ticks(d3.max(dataset) / 5);
+    const yAxis = d3.axisLeft(yScale).ticks(d3.max(dataset) / 5);
 
-    var xAxis = d3.axisBottom(xScale).ticks(dataset.length);
+    const xAxis = d3.axisBottom(xScale).ticks(dataset.length);
 
     svg.append('g')
       .attr('class', 'y axis')
@@ -80,45 +100,25 @@ class ChartContainer extends Component {
          });
   }
 
-  componentDidMount() {
-    const { dataset } = this.state;
-    this.renderChart(dataset);
-    window.addEventListener('resize', () => this.renderChart(dataset));
-  }
-
-  changeDataset() {
-    let randBar = _.random(0, this.state.dataset.length - 1);
-    let randVal = _.multiply(_.random(1, 3), 5);
-    let randOp = _.random(0, 1);
-    const newDataset = this.state.dataset.map((val, i) => i === randBar ? randOp === 0 ? val <= 0 ? val - randVal : val : val + randVal : val)
-    this.setState({
-      dataset: newDataset
-    })
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    console.log(nextState.dataset);
-
-    const { dataset } = nextState;
-
+  updateChart(dataset) {
     // reselect the svg
-    var svg = d3.select('#SvgWrapper');
+    const svg = d3.select('#SvgWrapper');
 
-    var svgWidth = parseInt(svg.style('width').replace('px', ''), 10);
-    var svgHeight = parseInt(svg.style('height').replace('px', ''), 10);
+    const svgWidth = parseInt(svg.style('width').replace('px', ''), 10);
+    const svgHeight = parseInt(svg.style('height').replace('px', ''), 10);
 
     // recalculate the scales
-    var yScale = d3.scaleLinear()
+    const yScale = d3.scaleLinear()
               .domain([0, d3.max(dataset)])
               .range([svgHeight, 0]);
 
-    var xScale = d3.scaleLinear()
+    const xScale = d3.scaleLinear()
               .domain([0, dataset.length])
               .range([0, svgWidth]);
 
-    var yAxis = d3.axisLeft(yScale).ticks(d3.max(dataset) / 5);
+    const yAxis = d3.axisLeft(yScale).ticks(d3.max(dataset) / 5);
     //
-    var xAxis = d3.axisBottom(xScale).ticks(dataset.length);
+    const xAxis = d3.axisBottom(xScale).ticks(dataset.length);
 
     svg.select(".x.axis") // change the x axis
         .call(xAxis)
@@ -126,10 +126,6 @@ class ChartContainer extends Component {
 
     svg.select(".y.axis") // change the y axis
         .call(yAxis);
-
-    // svg.select('.bar-5')
-    // .attr('height', svgHeight - yScale(dataset[5]))
-    // .attr('y', yScale(dataset[5]));
 
     dataset.forEach((val, index) => {
       let currHeight = d3.select('.bar-' + index).attr('height');
