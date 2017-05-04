@@ -7,7 +7,7 @@ import {
   setCellValue,
   setColumnValue,
   addSheetRow,
-  addSheetColumn
+  addSheetColumn,
 } from '../actions';
 
 import './GridContainer.css';
@@ -20,7 +20,7 @@ class GridContainer extends Component {
       cellCursor: 'A1',
       colCursor: '',
       isEditing: false,
-    }
+    };
 
     this.setCellCursor = this.setCellCursor.bind(this);
     this.renderGridCell = this.renderGridCell.bind(this);
@@ -33,16 +33,16 @@ class GridContainer extends Component {
     }
 
     document.addEventListener("keydown", (e) => {
-      let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
+      const gridScollableWrapper = document.getElementById('GridScrollableWrapper');
       const { sheetData } = this.props;
       const { isEditing } = this.state;
-      if(!isEditing) {
+      if (!isEditing) {
         // in order to avoid mutability to cellCursor, we make a copy of it
         let cellCursor = this.state.cellCursor;
         cellCursor = cellCursor === '' ? 'A1' : cellCursor;
 
         // get cursor location
-        const cellCursorCol = cellCursor.substring(0,1);
+        const cellCursorCol = cellCursor.substring(0, 1);
         const cellCursorRow = parseInt(cellCursor.substring(1), 10);
 
         // get bottom-most cell id
@@ -54,29 +54,29 @@ class GridContainer extends Component {
         const headersLastCol = String.fromCharCode(headersTailId.charCodeAt(0));
 
         const moveNumber = (num, increment) => {
-          if(increment === -1 && num === 1) {
+          if (increment === -1 && num === 1) {
             return num
           }
-          if(increment === 1 && num === cellLastRow) {
+          if (increment === 1 && num === cellLastRow) {
             return num
           }
           return num + increment;
         }
 
         const moveAlphabet = (char, increment) => {
-          if(increment === -1 && char === 'A') {
+          if (increment === -1 && char === 'A') {
             return char;
           }
-          if(increment === 1 && char === headersLastCol) {
+          if (increment === 1 && char === headersLastCol) {
             return char;
           }
-          if(increment > 0) { gridScollableWrapper.scrollLeft += 100; }
-          if(increment < 0) { gridScollableWrapper.scrollLeft -= 100; }
+          if (increment > 0) { gridScollableWrapper.scrollLeft += 100; }
+          if (increment < 0) { gridScollableWrapper.scrollLeft -= 100; }
 
           return String.fromCharCode(char.charCodeAt(0) + increment);
         };
 
-        switch(e.keyCode) {
+        switch (e.keyCode) {
           // move left
           case 37: this.setCellCursor(moveAlphabet(cellCursorCol, -1) + cellCursorRow); break;
           // move up
@@ -87,7 +87,7 @@ class GridContainer extends Component {
           case 40: this.setCellCursor(cellCursorCol + moveNumber(cellCursorRow, 1)); break;
           // tab (move right)
           case 9: this.setCellCursor(moveAlphabet(cellCursorCol, 1) + cellCursorRow); break;
-          default: return true
+          default: return true;
         }
       }
     });
@@ -110,17 +110,18 @@ class GridContainer extends Component {
   }
 
   renderGridColumn(header, colCursor) {
-    if(colCursor === header.id) {
+    if (colCursor === header.id) {
       return (
         <GridCellInput
           cellVal={header.title}
-          handleChange={(value) => this.props.setColumnValue(value, header.id)}
+          handleChange={value => this.props.setColumnValue(value, header.id)}
           handleFocus={() => this.setGridEditing(true)}
           handleBlur={() => this.setGridEditing(false)}
           cellClassName={'ColInput'}
         />
       );
-    } else {
+    }
+    if (colCursor !== header.id) {
       return (
         <GridCell
           cellVal={header.title}
@@ -140,21 +141,22 @@ class GridContainer extends Component {
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   renderGridCell(cell, cellCursor) {
-    if(cell.id === cellCursor) {
+    if (cell.id === cellCursor) {
       return (
         <GridCellInput
           cellVal={cell.val}
-          handleChange={(value) => this.props.setCellValue(value, cell.id)}
+          handleChange={value => this.props.setCellValue(value, cell.id)}
           handleFocus={() => this.setGridEditing(true)}
           handleBlur={() => this.setGridEditing(false)}
           cellClassName={'GridCellInput'}
         />
       );
-    } else {
+    }
+    if (cell.id !== cellCursor) {
       return (
         <GridCell
           cellVal={cell.val}
@@ -170,17 +172,18 @@ class GridContainer extends Component {
       <div>
         { sheetData.cells.map((rowData, index) => (
           <div className="GridRow" key={index}>
-            { rowData.map(cell => {
-              let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
+            { rowData.map((cell) => {
+              const gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
               return (
-              <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
-                { this.renderGridCell(cell, cellCursor) }
-              </div>
-            ); }) }
+                <div className={'GridCol GridCell ' + gridSelected} key={cell.id}>
+                  { this.renderGridCell(cell, cellCursor) }
+                </div>
+              );
+            })}
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   render() {
@@ -213,7 +216,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  loadSheetData: (sheetData) => dispatch(loadSheetData(sheetData)),
+  loadSheetData: sheetData => dispatch(loadSheetData(sheetData)),
   resetSheetData: () => dispatch(resetSheetData()),
   addSheetRow: () => dispatch(addSheetRow()),
   addSheetColumn: () => dispatch(addSheetColumn()),
