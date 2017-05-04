@@ -32,7 +32,6 @@ class GridContainer extends Component {
 
     document.addEventListener("keydown", (e) => {
       let gridScollableWrapper = document.getElementById('GridScrollableWrapper');
-      // console.log(gridScollableWrapper.scrollLeft);
       const { sheetData } = this.props;
       const { isEditing } = this.state;
       if(!isEditing) {
