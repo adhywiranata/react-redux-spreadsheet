@@ -11,8 +11,7 @@ import {
 } from '../actions';
 
 import './GridContainer.css';
-import GridCell from '../components/GridCell';
-import GridCellInput from '../components/GridCellInput';
+import { GridCell, GridCellInput } from '../components';
 
 class GridContainer extends Component {
   constructor(props) {
