@@ -12,17 +12,17 @@ class ChartContainer extends Component {
     this.changeDataset = this.changeDataset.bind(this);
   }
 
-  componentDidMount() {
-    const { dataset } = this.state;
+  renderChart(dataset) {
     const barPadding = 5;
     const customElasticEasing = d3.easeElastic.period(0.6);
 
+    d3.select('.chart-svg').remove();
+
     var svg = d3.select('#SvgWrapper')
           .append('svg')
+          .attr('class', 'chart-svg')
           .style('width', '100%')
           .style('height', '100%')
-        //  //responsive SVG needs these 2 attributes and no width and height attr
-        //   .attr('preserveAspectRatio', 'xMinYMin meet')
           .style('padding', 50)
           .style('background-color', '#FFFFFF');
 
@@ -78,6 +78,12 @@ class ChartContainer extends Component {
          .attr('height', function(d) {
             return svgHeight - yScale(d);
          });
+  }
+
+  componentDidMount() {
+    const { dataset } = this.state;
+    this.renderChart(dataset);
+    window.addEventListener('resize', () => this.renderChart(dataset));
   }
 
   changeDataset() {
