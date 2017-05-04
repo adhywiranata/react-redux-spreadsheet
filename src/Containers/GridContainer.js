@@ -11,6 +11,8 @@ import {
 } from '../actions';
 
 import './GridContainer.css';
+import GridCell from '../components/GridCell';
+import GridCellInput from '../components/GridCellInput';
 
 class GridContainer extends Component {
   constructor(props) {
@@ -22,6 +24,7 @@ class GridContainer extends Component {
     }
 
     this.setCellCursor = this.setCellCursor.bind(this);
+    this.renderGridCell = this.renderGridCell.bind(this);
   }
 
   componentDidMount() {
@@ -107,6 +110,80 @@ class GridContainer extends Component {
     this.setState({ colCursor: colDestination, cellCursor: '' });
   }
 
+  renderGridColumn(header, colCursor) {
+    if(colCursor === header.id) {
+      return (
+        <GridCellInput
+          cellVal={header.title}
+          handleChange={(value) => this.props.setColumnValue(value, header.id)}
+          handleFocus={() => this.setGridEditing(true)}
+          handleBlur={() => this.setGridEditing(false)}
+          cellClassName={'ColInput'}
+        />
+      );
+    } else {
+      return (
+        <GridCell
+          cellVal={header.title}
+          gridType={'column'}
+          handleClick={() => this.setColCursor(header.id)}
+        />
+      );
+    }
+  }
+
+  renderGridHeaders(sheetData, colCursor) {
+    return (
+      <div className="GridRow">
+        { sheetData.headers.map(header => (
+          <div className="GridCol" key={header.id}>
+            { this.renderGridColumn(header, colCursor) }
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  renderGridCell(cell, cellCursor) {
+    if(cell.id === cellCursor) {
+      return (
+        <GridCellInput
+          cellVal={cell.val}
+          handleChange={(value) => this.props.setCellValue(value, cell.id)}
+          handleFocus={() => this.setGridEditing(true)}
+          handleBlur={() => this.setGridEditing(false)}
+          cellClassName={'GridCellInput'}
+        />
+      );
+    } else {
+      return (
+        <GridCell
+          cellVal={cell.val}
+          gridType={'cell'}
+          handleClick={() => this.setCellCursor(cell.id)}
+        />
+      );
+    }
+  }
+
+  renderGridRow(sheetData, cellCursor) {
+    return (
+      <div>
+        { sheetData.cells.map((rowData, index) => (
+          <div className="GridRow" key={index}>
+            { rowData.map(cell => {
+              let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
+              return (
+              <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
+                { this.renderGridCell(cell, cellCursor) }
+              </div>
+            ); }) }
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   render() {
     const { sheetData } = this.props;
     const { cellCursor, colCursor } = this.state;
@@ -127,48 +204,8 @@ class GridContainer extends Component {
           <div className="GridFloat">
             <button className="ActionBtn" onClick={this.props.addSheetColumn}>+</button>
           </div>
-          <div className="GridRow">
-          { sheetData.headers.map(header => (
-            <div className="GridCol" key={header.id}>
-              { colCursor === header.id ? (
-                  <input
-                    type="text"
-                    value={header.title}
-                    className="ColInput"
-                    onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
-                    onChange={(e) => this.props.setColumnValue(e.target.value, header.id)}
-                    onBlur={() => this.setGridEditing(false)}
-                  />
-                ) : (
-                  <button className="ColBtn" onClick={() => this.setColCursor(header.id)}>{header.title}</button>
-                )
-              }
-            </div>
-          ))}
-          </div>
-          { sheetData.cells.map((rowData, index) => (
-            <div className="GridRow" key={index}>
-              { rowData.map(cell => {
-                let gridSelected = cell.id === cellCursor ? 'CellSelected' : '';
-                return (
-                <div className={ 'GridCol GridCell ' + gridSelected } key={cell.id}>
-                  { cell.id === cellCursor ? (
-                  <input
-                    type="text"
-                    className="GridCellInput"
-                    value={cell.val}
-                    onChange={(e) => this.props.setCellValue(e.target.value, cell.id)}
-                    onFocus={(e) => { e.target.select(); this.setGridEditing(true); }}
-                    onBlur={() => this.setGridEditing(false)}
-                  />) : (
-                    <button className="GridCellText" onClick={() => this.setCellCursor(cell.id)}>
-                      {cell.val} &nbsp;
-                    </button>)
-                  }
-                </div>
-              ); }) }
-            </div>
-          ))}
+          { this.renderGridHeaders(sheetData, colCursor) }
+          { this.renderGridRow(sheetData, cellCursor) }
         </div>
         <div style={{ marginTop: -40 }}>
           <button className="ActionBtn" onClick={this.props.addSheetRow}>Add New Row</button>
