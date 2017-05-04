@@ -25,4 +25,4 @@ export const addSheetColumn = () => ({
 
 export const resetSheetData = () => ({
   type: ActionTypes.RESET_SHEET_DATA,
-})
+});
